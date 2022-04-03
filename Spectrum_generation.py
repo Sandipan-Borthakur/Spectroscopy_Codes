@@ -53,10 +53,10 @@ def spec_gen(path,objname,date_of_obs,resol,airglow_calib=True,savedata=True):
      
      datafilepath = 'files_for_calibration/'
      instr_rspns_path = datafilepath + '2020116_InstrumentFunction_' + resol + '.dat'
-     primary_line_list = datafilepath + ascii.read('primary_line_list_' + resol + '.csv')['Wavelength']
-     full_line_list = datafilepath + ascii.read('full_line_list_' + resol + '.csv')['Wavelength']
-     continuum_list = datafilepath + ascii.read('continuum_list_' + resol + '.csv')['Wavelength']
-     template = datafilepath + fits.getdata(resol + '_pattern.fits')
+     primary_line_list = ascii.read(datafilepath + 'primary_line_list_' + resol + '.csv')['Wavelength']
+     full_line_list = ascii.read(datafilepath + 'full_line_list_' + resol + '.csv')['Wavelength']
+     continuum_list = ascii.read(datafilepath + 'continuum_list_' + resol + '.csv')['Wavelength']
+     template = fits.getdata(datafilepath + resol + '_pattern.fits')
      end_matching_template = datafilepath + resol + '_end_matching_template.txt'
      
      science_imgcube,lamp_imgcube,timearr = science_and_lamp_data(path)
