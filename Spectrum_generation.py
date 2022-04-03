@@ -1,8 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import os
-import sys
-sys.path.append('files_for_calibration')
 from astropy.io import ascii, fits
 from astropy.table import Table
 from deepCR.model import deepCR
@@ -52,13 +50,15 @@ def spec_gen(path,objname,date_of_obs,resol,airglow_calib=True,savedata=True,**e
           primary_order = 4
           line_dist_from_template_centre = -11
           n_wave = [5889.953, 5895.923, 6300.304]
-
-     instr_rspns_path = '2020116_InstrumentFunction_' + resol + '.dat'
-     primary_line_list = ascii.read('primary_line_list_' + resol + '.csv')['Wavelength']
-     full_line_list = ascii.read('full_line_list_' + resol + '.csv')['Wavelength']
-     continuum_list = ascii.read('continuum_list_' + resol + '.csv')['Wavelength']
-     template = fits.getdata(resol + '_pattern.fits')
-
+     
+     datafilepath = 'files_for_calibration/'
+     instr_rspns_path = datafilepath + '2020116_InstrumentFunction_' + resol + '.dat'
+     primary_line_list = datafilepath + ascii.read('primary_line_list_' + resol + '.csv')['Wavelength']
+     full_line_list = datafilepath + ascii.read('full_line_list_' + resol + '.csv')['Wavelength']
+     continuum_list = datafilepath + ascii.read('continuum_list_' + resol + '.csv')['Wavelength']
+     template = datafilepath + fits.getdata(resol + '_pattern.fits')
+     end_matching_template = datafilepath + resol + '_end_matching_template.txt'
+     
      science_imgcube,lamp_imgcube,timearr = science_and_lamp_data(path)
 
      data = ascii.read(instr_rspns_path)
@@ -77,8 +77,8 @@ def spec_gen(path,objname,date_of_obs,resol,airglow_calib=True,savedata=True,**e
                _, img = model.clean(img, threshold=0.01, inpaint=True)
 
           else:
-               le = ends['leftend']
-               re = ends['rightend']
+               img = science_imgcube[iimg,:,:]
+               le,re,_ = end_search(img,end_matching_template)
                img = science_imgcube[iimg, le:re, :]
                _, img = model.clean(img, threshold=0.01, inpaint=True)
                los, lis, lap, rap, ris, ros = estimate_aperture_sky_limits(img, 'Sandipan')
