@@ -10,7 +10,7 @@ from Calibration import calibration
 from Calibration_using_airglow_line import airglow_calibration
 from Science_and_lamp_data_select import science_and_lamp_data
 
-def spec_gen(path,objname,date_of_obs,resol,airglow_calib=True,savedata=True,**ends):
+def spec_gen(path,objname,date_of_obs,resol,airglow_calib=True,savedata=True):
 
      if resol == 'R500_blue':
           dispersion = 3.7
